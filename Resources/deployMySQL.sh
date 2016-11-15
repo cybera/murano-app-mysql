@@ -23,9 +23,3 @@ echo "/opt/mysql_data/mysql r,
 /opt/mysql_data/mysql/** rwk," | sudo tee --append /etc/apparmor.d/local/usr.sbin.mysqld
 
 sudo service mysql start
-
-
-mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "CREATE DATABASE wordpress"
-mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "CREATE USER 'wp_user'@'localhost' IDENTIFIED BY '%WP_MYSQL_PASSWORD%'"
-mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'wp_user'@'localhost' WITH GRANT OPTION"
-mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES"

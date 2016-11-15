@@ -1,10 +1,12 @@
 Format: 1.3
 Type: Application
-FullName: ca.cybera.WordPressAIO
-Name: WordPress All-in-One
+FullName: ca.cybera.MySqL
+Name: MySQL
 Description: |
- WordPress is a free and open source blogging tool and a content management system (CMS) based on PHP and MySQL.
+ MySql is a relational database management system (RDBMS), and ships with
+ no GUI tools to administer MySQL databases or manage data contained within
+ the databases.
 Author: 'Cybera Inc'
-Tags: [CMS, PHP, Web]
+Tags: [Database, MySql, SQL, RDBMS]
 Classes:
-  ca.cybera.WordPressAIO: WordPressAIO.yaml
+  ca.cybera.MySql: MySql.yaml

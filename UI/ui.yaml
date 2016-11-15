@@ -7,9 +7,8 @@ Templates:
         size: 2
 Application:
   ?:
-    type: ca.cybera.WordPressAIO
+    type: ca.cybera.MySql
   dbRootPassword: $.dbConfiguration.password
-  wpDbPassword: $.wpConfiguration.password
   instance:
     ?:
       type: io.murano.resources.LinuxMuranoInstance
@@ -36,21 +35,6 @@ Forms:
           description: >-
             Please provide the root MySQL password.
 
-  - wpConfiguration:
-      fields:
-        - name: title
-          type: string
-          required: false
-          hidden: true
-          descriptionTitle: WordPress Configuration
-          description: Specify WordPress configuration properties
-        - name: password
-          type: password
-          label: WordPress MySQL Password
-          descriptionTitle: Password
-          description: >-
-            Please provide the password that is going to be used to connect to the database.
-
   - instanceConfiguration:
       fields:
         - name: title
@@ -58,7 +42,7 @@ Forms:
           required: false
           hidden: true
           description: >-
-            Specify the instance parameters for the WordPress environment.
+            Specify the instance parameters.
         - name: flavor
           type: flavor
           label: Instance flavor

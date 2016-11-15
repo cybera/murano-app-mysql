@@ -1,0 +1,56 @@
+Namespaces:
+  =: ca.cybera
+  conf: io.murano.configuration
+  res: io.murano.resources
+  std: io.murano
+  sys: io.murano.system
+
+Name: MySql
+Extends: std:Application
+
+Properties:
+  dbRootPassword:
+    Contract: $.string().notNull()
+  instance:
+    Contract: $.class(res:Instance).notNull()
+
+Methods:
+  .init:
+    Body:
+      - $._environment: $.find(std:Environment).require()
+
+  deploy:
+    Body:
+      - If: not $.getAttr(deployed, false)
+        Then:
+          # Create Security Group
+          - $._environment.reporter.report($this, 'Creating security group')
+          - $securityGroupIngress:
+            - ToPort: 3306
+              FromPort: 3306
+              IpProtocol: tcp
+              External: true
+          - $._environment.securityGroupManager.addGroupIngress($securityGroupIngress)
+
+          - $._environment.reporter.report($this, 'Creating instance for MySql')
+
+          # Launch the instance
+          - $.instance.deploy()
+
+          # Deploy MySQL
+          - $._environment.reporter.report($this, 'Deploying MySQL')
+          - $replacements:
+              "%ROOT_MYSQL_PASSWORD%": $.dbRootPassword
+          - $file: sys:Resources.string('deployMySQL.sh').replace($replacements)
+          - conf:Linux.runCommand($.instance.agent, $file)
+          - $._environment.reporter.report($this, 'MySQL is installed.')
+
+          # Assign Floating IP
+          - If: $.instance.assignFloatingIp
+            Then:
+              - $host: $.instance.floatingIpAddress
+            Else:
+              - $host: $.instance.ipAddresses.first()
+          - $._environment.reporter.report($this, format('MySQL is available at {0}:3306', $host))
+
+          - $.setAttr(deployed, true)
