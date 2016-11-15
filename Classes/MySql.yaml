@@ -11,6 +11,8 @@ Extends: std:Application
 Properties:
   dbRootPassword:
     Contract: $.string().notNull()
+  connectionIP:
+    Contract: $.string().notNull()
   instance:
     Contract: $.class(res:Instance).notNull()
 
@@ -23,16 +25,14 @@ Methods:
     Body:
       - If: not $.getAttr(deployed, false)
         Then:
+          - $._environment.reporter.report($this, 'Creating instance for MySql')
           # Create Security Group
-          - $._environment.reporter.report($this, 'Creating security group')
           - $securityGroupIngress:
             - ToPort: 3306
               FromPort: 3306
               IpProtocol: tcp
               External: true
           - $._environment.securityGroupManager.addGroupIngress($securityGroupIngress)
-
-          - $._environment.reporter.report($this, 'Creating instance for MySql')
 
           # Launch the instance
           - $.instance.deploy()
@@ -41,6 +41,7 @@ Methods:
           - $._environment.reporter.report($this, 'Deploying MySQL')
           - $replacements:
               "%ROOT_MYSQL_PASSWORD%": $.dbRootPassword
+              "%CONNECTION_IP%": $.connectionIP
           - $file: sys:Resources.string('deployMySQL.sh').replace($replacements)
           - conf:Linux.runCommand($.instance.agent, $file)
           - $._environment.reporter.report($this, 'MySQL is installed.')
@@ -51,6 +52,6 @@ Methods:
               - $host: $.instance.floatingIpAddress
             Else:
               - $host: $.instance.ipAddresses.first()
-          - $._environment.reporter.report($this, format('MySQL is available at {0}:3306', $host))
+          - $._environment.reporter.report($this, 'MySQL is available at' +host+ ':3306')
 
           - $.setAttr(deployed, true)

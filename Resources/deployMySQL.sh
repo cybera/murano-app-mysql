@@ -22,4 +22,9 @@ sudo chown -R mysql:mysql /opt/mysql_data/mysql
 echo "/opt/mysql_data/mysql r,
 /opt/mysql_data/mysql/** rwk," | sudo tee --append /etc/apparmor.d/local/usr.sbin.mysqld
 
+sudo sed -i -e "s/bind-address = 127.0.0.1/#bind-address = 127.0.0.1/g" /etc/mysql/my.cnf
+
 sudo service mysql start
+
+mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY %ROOT_MYSQL_PASSWORD% WITH GRANT OPTION"
+mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES"
