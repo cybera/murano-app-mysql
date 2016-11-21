@@ -19,12 +19,17 @@ sudo ln -s /opt/mysql_data/mysql /var/lib/mysql
 echo "$vol /opt/mysql_data ext3 defaults 0 1 "| sudo tee --append  /etc/fstab
 sudo chown -R mysql:mysql /opt/mysql_data/mysql
 
-echo "/opt/mysql_data/mysql r,
+echo "/opt/mysql_data/mysql/ r,
 /opt/mysql_data/mysql/** rwk," | sudo tee --append /etc/apparmor.d/local/usr.sbin.mysqld
 
-sudo sed -i -e "s/bind-address = 127.0.0.1/#bind-address = 127.0.0.1/g" /etc/mysql/my.cnf
+sudo sed -i -e "s/bind-address/#bind-address/g" /etc/mysql/my.cnf
 
+sudo service apparmor restart
 sudo service mysql start
 
-mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY %ROOT_MYSQL_PASSWORD% WITH GRANT OPTION"
+mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY '%ROOT_MYSQL_PASSWORD%' WITH GRANT OPTION"
 mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES"
+
+echo "[mysqldump]
+password=%ROOT_MYSQL_PASSWORD%" | sudo tee --append /root/.my.cnf
+sudo chmod 600 /root/.my.cnf

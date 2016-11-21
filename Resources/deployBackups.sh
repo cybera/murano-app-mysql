@@ -14,11 +14,11 @@ sudo mkdir /var/lib/mysql_backups
 cat << 'EOF' | sudo tee -a  /usr/local/bin/backup_mysql.sh
 #!/bin/bash
 backup_dir="/var/lib/mysql_backups"
-filename="postgres-`hostname`-`eval date +%Y%m%d`.sql.gz"
+filename="mysql-`hostname`-`eval date +%Y%m%d`.sql.gz"
 fullpath="${backup_dir}/${filename}"
 
 # Dump the entire database
-/usr/bin/mysqldump --events --opt --all-databases | gzip > $fullpath
+/usr/bin/mysqldump -u root --events --opt --all-databases | gzip > $fullpath
 
 if [[ $? != 0 ]]; then
     echo "Error dumping database"
