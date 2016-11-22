@@ -4,6 +4,8 @@ FullName: ca.cybera.MySQL
 Name: MySQL
 Description: |
   MySQL is a relational database management system (RDBMS).
+  This application will store the MySQL databases on a volume
+  and optionally back them up to the Object Storage Service.
 Author: 'Cybera Inc'
 Tags: [Database, MySQL, SQL, RDBMS]
 Classes:
