@@ -1,11 +1,35 @@
 #!/bin/bash
 
+# Determine DAIR region
+_region=""
+_keystone=""
+_ip=$(curl -s ifconfig.co)
+
+case $_ip in
+  199.116.232.*)
+    _region="honolulu"
+    _keystone="dair-hnl-v02.dair-atir.canarie.ca"
+    ;;
+  208.75.74.*)
+    _region="alberta"
+    _keystone="nova-ab.dair-atir.canarie.ca"
+    ;;
+  162.244.228.*)
+    _region="alberta"
+    _keystone="nova-ab.dair-atir.canarie.ca"
+    ;;
+  208.75.75.*)
+    _region="quebec"
+    _keystone="nova-ab.dair-atir.canarie.ca"
+    ;;
+esac
+
 echo "export OS_TENANT_NAME=%TENANT%
 export OS_USERNAME=%USERID%
 export OS_PASSWORD=%PASSWORD%
-export OS_AUTH_URL="https://dair-hnl-v02.dair-atir.canarie.ca:5000/v2.0/"
+export OS_AUTH_URL=https://${_keystone}:5000/v2.0/
 export OS_AUTH_STRATEGY=keystone
-export OS_REGION_NAME=honolulu" >> /root/openrc
+export OS_REGION_NAME=${_region}" >> /root/openrc
 
 sudo apt-get install -y python-pip
 sudo apt-get -y install python-swiftclient
