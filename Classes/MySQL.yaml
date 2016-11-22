@@ -5,7 +5,7 @@ Namespaces:
   std: io.murano
   sys: io.murano.system
 
-Name: MySql
+Name: MySQL
 Extends: std:Application
 
 Properties:
@@ -33,7 +33,7 @@ Methods:
     Body:
       - If: not $.getAttr(deployed, false)
         Then:
-          - $._environment.reporter.report($this, 'Creating instance for MySql')
+          - $._environment.reporter.report($this, 'Creating instance for MySQL')
           # Create Security Group
           - $securityGroupIngress:
             - ToPort: 3306
@@ -66,6 +66,6 @@ Methods:
               - $._environment.reporter.report($this, 'Backups are enabled.')
 
           - $host: $.instance.ipAddresses.first()
-          - $._environment.reporter.report($this, 'MySQL is available at ' +$host+ ':3306')
+          - $._environment.reporter.report($this, 'MySQL is available at ' + $host + ':3306')
 
           - $.setAttr(deployed, true)

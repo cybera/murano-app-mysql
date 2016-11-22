@@ -1,12 +1,10 @@
 Format: 1.3
 Type: Application
-FullName: ca.cybera.MySqL
+FullName: ca.cybera.MySQL
 Name: MySQL
 Description: |
- MySql is a relational database management system (RDBMS), and ships with
- no GUI tools to administer MySQL databases or manage data contained within
- the databases.
+  MySQL is a relational database management system (RDBMS).
 Author: 'Cybera Inc'
-Tags: [Database, MySql, SQL, RDBMS]
+Tags: [Database, MySQL, SQL, RDBMS]
 Classes:
-  ca.cybera.MySql: MySql.yaml
+  ca.cybera.MySQL: MySQL.yaml

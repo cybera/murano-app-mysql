@@ -7,7 +7,7 @@ Templates:
         size: $.instanceConfiguration.volSize
 Application:
   ?:
-    type: ca.cybera.MySql
+    type: ca.cybera.MySQL
   dbRootPassword: $.dbConfiguration.password
   connectionIP: $.instanceConfiguration.connectionIP
   doBackups: $.backupConfiguration.doBackups
@@ -70,7 +70,7 @@ Forms:
             invalid: Enter valid IP address.
           label: IP to connect from
           description: >-
-            Set private IP address to whitelist to control access to the DB
+            Set a private IP address to whitelist to control access to the DB.
         - name: volSize
           type: integer
           label: Volume size
@@ -78,13 +78,13 @@ Forms:
           minValue: 1
           maxValue: 1024
           description: >-
-            Size of the volume to be created for MySql database.Must be between 1 and 1024Gb
+            Size of the volume (in GB) to be created for MySQL.
         - name: keyPair
           type: keypair
           label: Key Pair
           description: >-
-            Select the Key Pair to control access to instances. You can login to
-            instances using this KeyPair after the deployment of application.
+            Select the Key Pair to access the instances. You can login to
+            instances using this Key Pair after the deployment of application.
           required: false
         - name: unitNamingPattern
           type: string
@@ -93,11 +93,11 @@ Forms:
           maxLength: 64
           regexpValidator: '^[a-zA-z][-_\w]*$'
           errorMessages:
-            invalid: Just letters, numbers, underscores and hyphens are allowed.
-          helpText: Just letters, numbers, underscores and hyphens are allowed.
+            invalid: Only letters, numbers, underscores and hyphens are allowed.
+          helpText: Only letters, numbers, underscores and hyphens are allowed.
           description: >-
-            Specify a string, that will be used in instance hostname.
-            Just A-Z, a-z, 0-9, dash and underline are allowed.
+            Specify a string that will be used in instance hostname.
+            Only A-Z, a-z, 0-9, dash, and underline are allowed.
   - backupConfiguration:
       fields:
         - name: title
@@ -109,7 +109,7 @@ Forms:
           type: boolean
           label: Check to enable backups
           description: >-
-            Set to true to enable backups to object store (every 10 days and every 3 months).
+            Set to true to enable backups to object storage (every 10 days and every 3 months).
           initial: true
           required: false
         - name: tenant
@@ -117,16 +117,16 @@ Forms:
           label: Openstack Tenant
           descriptionTitle: Tenant
           description: >-
-            Please provide your OpenStack tenant to access the object store.
+            Please provide your OpenStack tenant to access the object storage service.
         - name: userID
           type: string
           label: Openstack User ID
           descriptionTitle: UserID
           description: >-
-            Please provide your OpenStack userid to access the object store.
+            Please provide your OpenStack userid to access the object storage service.
         - name: password
           type: string
           label: Openstack password
           descriptionTitle: Password
           description: >-
-            Please provide your OpenStack  password to access the object store.
+            Please provide your OpenStack password to access the object storage service.
