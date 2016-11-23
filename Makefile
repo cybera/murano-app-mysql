@@ -1,3 +1,5 @@
+all: zip upload
+
 zip:
 	rm ca.cybera.MySQL.zip || true
 	zip -r ca.cybera.MySQL.zip *
