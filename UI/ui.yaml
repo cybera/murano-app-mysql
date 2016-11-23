@@ -1,10 +1,5 @@
 Version: 2
-Templates:
-  MySQLVolumes:
-    '/dev/vdd':
-        ?:
-          type: io.murano.resources.CinderVolume
-        size: $.instanceConfiguration.volSize
+
 Application:
   ?:
     type: ca.cybera.MySQL
@@ -14,13 +9,13 @@ Application:
   openstackTenant: $.backupConfiguration.tenant
   openstackUser: $.backupConfiguration.userID
   openstackPassword: $.backupConfiguration.password
+  volSize: $.instanceConfiguration.volSize
   instance:
     ?:
       type: io.murano.resources.LinuxMuranoInstance
     name: generateHostname($.instanceConfiguration.unitNamingPattern, 1)
     flavor: $.instanceConfiguration.flavor
     image: $.instanceConfiguration.osImage
-    volumes: $MySQLVolumes
     keyname: $.instanceConfiguration.keyPair
 
 Forms:
@@ -114,18 +109,21 @@ Forms:
           required: false
         - name: tenant
           type: string
+          required: false
           label: Openstack Tenant
           descriptionTitle: Tenant
           description: >-
             Please provide your OpenStack tenant to access the object storage service.
         - name: userID
           type: string
+          required: false
           label: Openstack User ID
           descriptionTitle: UserID
           description: >-
             Please provide your OpenStack userid to access the object storage service.
         - name: password
           type: string
+          required: false
           label: Openstack password
           descriptionTitle: Password
           description: >-
