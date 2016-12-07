@@ -55,7 +55,7 @@ find $backup_dir -ctime +20 -type f -delete
 # Upload to swift
 source /root/openrc
 cd $backup_dir
-swift upload mysql $filename > /dev/null
+swift upload mysql1 $filename > /dev/null
 if [[ $? != 0 ]]; then
   echo "Error uploading backup"
   exit 1
