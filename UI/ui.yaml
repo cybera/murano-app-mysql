@@ -29,7 +29,7 @@ Forms:
           description: Specify the MySQL database properties
         - name: password
           type: password
-          regexpValidator: '^.{5,20}?$'
+          regexpValidator: '^.{5,100}?$'
           label: MySQL Root Password
           descriptionTitle: Password
           description: >-
@@ -121,7 +121,7 @@ Forms:
         - name: password
           type: password
           required: false
-          regexpValidator: '^.{5,20}?$'
+          regexpValidator: '^.{5,100}?$'
           label: Openstack password
           descriptionTitle: Password
           description: >-
