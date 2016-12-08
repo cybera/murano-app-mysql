@@ -29,10 +29,13 @@ Forms:
           description: Specify the MySQL database properties
         - name: password
           type: password
+          regexpValidator: '^.{5,20}?$'
           label: MySQL Root Password
           descriptionTitle: Password
           description: >-
             Please provide the root MySQL password.
+          helpText: >-
+            Password must be between 5 and 20 characters long.
 
   - instanceConfiguration:
       fields:
@@ -122,9 +125,13 @@ Forms:
           description: >-
             Please provide your OpenStack userid to access the object storage service.
         - name: password
-          type: string
+          type: password
           required: false
+          regexpValidator: '^.{5,20}?$'
           label: Openstack password
           descriptionTitle: Password
           description: >-
             Please provide your OpenStack password to access the object storage service.
+          helpText: >-
+            Password must be between 5 and 20 characters long.
+
