@@ -6,8 +6,8 @@ Application:
   dbRootPassword: $.dbConfiguration.password
   connectionIP: $.instanceConfiguration.connectionIP
   doBackups: $.backupConfiguration.doBackups
-  openstackTenant: $.backupConfiguration.tenant
-  openstackUser: $.backupConfiguration.userID
+  openstackTenantID: $.backupConfiguration.tenantID
+  openstackUsername: $.backupConfiguration.username
   openstackPassword: $.backupConfiguration.password
   volSize: $.instanceConfiguration.volSize
   instance:
@@ -110,20 +110,14 @@ Forms:
             Set to true to enable backups to object storage (every 10 days and every 3 months).
           initial: true
           required: false
-        - name: tenant
-          type: string
-          required: false
-          label: Openstack Tenant Name
-          descriptionTitle: Tenant name
-          description: >-
-            Please provide your OpenStack tenant name to access the object storage service.
-        - name: userID
-          type: string
-          required: false
-          label: Openstack User ID
-          descriptionTitle: UserID
-          description: >-
-            Please provide your OpenStack userid to access the object storage service.
+        - name: tenantID
+          type: tenantid
+          required: true
+          hidden: true
+        - name: username
+          type: username
+          required: true
+          hidden: true
         - name: password
           type: password
           required: false
