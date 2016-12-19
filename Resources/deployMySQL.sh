@@ -21,7 +21,12 @@ sudo chown -R mysql:mysql /opt/mysql_data/mysql
 
 echo "/opt/mysql_data/mysql/ r,
 /opt/mysql_data/mysql/** rwk," | sudo tee --append /etc/apparmor.d/local/usr.sbin.mysqld
+
+sudo service apparmor restart
+sudo service mysql restart
+
 tmp="%CONNECTION_IP%"
+
 if  [[ !  -z  $tmp  ]]
 then
   sudo sed -i -e "s/bind-address/#bind-address/g" /etc/mysql/my.cnf
@@ -29,7 +34,6 @@ then
   mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES;"
 fi
 
-sudo service apparmor restart
 sudo service mysql restart
 
 echo "[mysqldump]
