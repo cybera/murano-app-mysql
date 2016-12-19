@@ -21,12 +21,12 @@ sudo chown -R mysql:mysql /opt/mysql_data/mysql
 
 echo "/opt/mysql_data/mysql/ r,
 /opt/mysql_data/mysql/** rwk," | sudo tee --append /etc/apparmor.d/local/usr.sbin.mysqld
-
-if  [[ !  -z  %CONNECTION_IP%  ]]
+tmp="%CONNECTION_IP%"
+if  [[ !  -z  $tmp  ]]
 then
   sudo sed -i -e "s/bind-address/#bind-address/g" /etc/mysql/my.cnf
-  mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY '%ROOT_MYSQL_PASSWORD%' WITH GRANT OPTION"
-  mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES"
+  mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY '%ROOT_MYSQL_PASSWORD%' WITH GRANT OPTION;"
+  mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES;"
 fi
 
 sudo service apparmor restart
