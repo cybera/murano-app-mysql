@@ -31,11 +31,16 @@ export OS_AUTH_URL=https://${_keystone}:5000/v2.0/
 export OS_AUTH_STRATEGY=keystone
 export OS_REGION_NAME=${_region}" >> /root/openrc
 
-sudo apt-get install -y python-pip
-sudo apt-get -y install python-swiftclient
+if (python -mplatform | grep -qi Ubuntu)
+then #Ubuntu
+  apt-get install -y python-pip
+  apt-get -y install python-swiftclient
+else #CentOS
+  yum install -y python-swiftclient
+fi
 
-sudo mkdir /var/lib/mysql_backups
-cat << 'EOF' | sudo tee -a  /usr/local/bin/backup_mysql.sh
+mkdir /var/lib/mysql_backups
+cat << 'EOF' |  tee -a  /usr/local/bin/backup_mysql.sh
 #!/bin/bash
 backup_dir="/var/lib/mysql_backups"
 filename="mysql-`hostname`-`eval date +%Y%m%d`.sql.gz"
@@ -61,9 +66,9 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 EOF
-sudo chmod +x  /usr/local/bin/backup_mysql.sh
-sudo crontab -l > mycron 2>/dev/null
+chmod +x  /usr/local/bin/backup_mysql.sh
+crontab -l > mycron 2>/dev/null
 echo "30 03 */10 * * /usr/local/bin/backup_mysql.sh > /dev/null" >> mycron
 echo "30 03 01 */3 * /usr/local/bin/backup_mysql.sh > /dev/null" >> mycron
-sudo crontab mycron
-rm mycron
+crontab mycron
+rm  -f mycron

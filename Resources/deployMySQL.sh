@@ -1,41 +1,55 @@
 #!/bin/bash
 
-vol="/dev/$(sudo lsblk -o name,type,mountpoint,label,uuid | grep -v root | grep -v ephem | grep -v SWAP | grep -v vda | tail -1 | awk '{print $1}')"
+vol="/dev/$(lsblk -o name,type,mountpoint,label,uuid | grep -v root | grep -v ephem | grep -v SWAP | grep -v vda | tail -1 | awk '{print $1}')"
+mkfs -t ext4 $vol
+mkdir /opt/mysql_data
+mount $vol /opt/mysql_data
+echo "$vol /opt/mysql_data ext4 defaults 0 1 " | tee --append  /etc/fstab
 
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password %ROOT_MYSQL_PASSWORD%'
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password %ROOT_MYSQL_PASSWORD%'
+if (python -mplatform | grep -qi Ubuntu)
+then #Ubuntu
+  debconf-set-selections <<< 'mysql-server mysql-server/root_password password %ROOT_MYSQL_PASSWORD%'
+  debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password %ROOT_MYSQL_PASSWORD%'
+  apt-get -y update
+  apt-get -y -q install mysql-server
+  service mysql stop
+  mv /var/lib/mysql /opt/mysql_data/
+  chown -R mysql:mysql /opt/mysql_data/mysql
+  ln -s /opt/mysql_data/mysql /var/lib/mysql
+  echo "/opt/mysql_data/mysql/ r,
+/opt/mysql_data/mysql/** rwk," | tee --append /etc/apparmor.d/local/usr.sbin.mysqld
+  service apparmor restart
+  service mysql restart
 
-sudo mkfs -t ext4 $vol
-sudo mkdir /opt/mysql_data
-sudo mount $vol /opt/mysql_data
-
-sudo apt-get -y -q install mysql-server
-sudo service mysql stop
-
-sudo cp -a /var/lib/mysql/ /opt/mysql_data/
-sudo rm -rf /var/lib/mysql/
-sudo ln -s /opt/mysql_data/mysql /var/lib/mysql
-
-echo "$vol /opt/mysql_data ext4 defaults 0 1 " | sudo tee --append  /etc/fstab
-sudo chown -R mysql:mysql /opt/mysql_data/mysql
-
-echo "/opt/mysql_data/mysql/ r,
-/opt/mysql_data/mysql/** rwk," | sudo tee --append /etc/apparmor.d/local/usr.sbin.mysqld
-
-sudo service apparmor restart
-sudo service mysql restart
-
-tmp="%CONNECTION_IP%"
-
-if  [[ !  -z  $tmp  ]]
-then
-  sudo sed -i -e "s/bind-address/#bind-address/g" /etc/mysql/my.cnf
-  mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY '%ROOT_MYSQL_PASSWORD%' WITH GRANT OPTION;"
-  mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES;"
+else #CentOS
+  yum clean all
+  yum install -y centos-release-openstack-mitaka
+  yum -y  update
+  yum -y install mariadb-server mariadb
+  systemctl enable mariadb
+  mv /var/lib/mysql /opt/mysql_data/
+  chcon -R -t mysqld_db_t /opt/mysql_data/mysql
+  chcon -Ru system_u /opt/mysql_data/mysql
+  chown -R mysql:mysql /opt/mysql_data/mysql
+  sed -i -e "s|var/lib|opt/mysql_data|g" /etc/my.cnf.d/mariadb-server.cnf
+  sed -i -e "s|\[client\]|\[client\]\nsocket=/opt/mysql_data/mysql/mysql.sock|g" /etc/my.cnf.d/client.cnf
+  setenforce 0
+  systemctl start mariadb
+  mysqladmin -u root password %ROOT_MYSQL_PASSWORD%
 fi
 
-sudo service mysql restart
+ip="%CONNECTION_IP%"
+if  [[ !  -z  $ip  ]]
+ then
+   mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY '%ROOT_MYSQL_PASSWORD%' WITH GRANT OPTION;"
+   mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES;"
+   if (python -mplatform | grep -qi Ubuntu)
+   then #Ubuntu
+      sed -i -e "s/bind-address/#bind-address/g" /etc/mysql/my.cnf
+      service mysql restart
+   fi
+fi
 
 echo "[mysqldump]
-password=%ROOT_MYSQL_PASSWORD%" | sudo tee --append /root/.my.cnf
-sudo chmod 600 /root/.my.cnf
+password=%ROOT_MYSQL_PASSWORD%" | tee --append /root/.my.cnf
+chmod 600 /root/.my.cnf
