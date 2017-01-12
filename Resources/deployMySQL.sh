@@ -34,6 +34,7 @@ else #CentOS
   sed -i -e "s|var/lib|opt/mysql_data|g" /etc/my.cnf.d/mariadb-server.cnf
   sed -i -e "s|\[client\]|\[client\]\nsocket=/opt/mysql_data/mysql/mysql.sock|g" /etc/my.cnf.d/client.cnf
   setenforce 0
+  sed -i -e "s|enforcing|disabled|g" /etc/selinux/config
   systemctl start mariadb
   mysqladmin -u root password %ROOT_MYSQL_PASSWORD%
 fi

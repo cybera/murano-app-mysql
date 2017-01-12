@@ -33,10 +33,9 @@ export OS_REGION_NAME=${_region}" >> /root/openrc
 
 if (python -mplatform | grep -qi Ubuntu)
 then #Ubuntu
-  apt-get install -y python-pip
-  apt-get -y install python-swiftclient
+  apt-get install -y python-pip python-swiftclient
 else #CentOS
-  yum install -y python-swiftclient
+  yum -y install python-devel python-pip python-swiftclient
 fi
 
 mkdir /var/lib/mysql_backups
