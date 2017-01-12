@@ -14,7 +14,6 @@ then #Ubuntu
   apt-get -y -q install mysql-server
   service mysql stop
   mv /var/lib/mysql /opt/mysql_data/
-  chown -R mysql:mysql /opt/mysql_data/mysql
   ln -s /opt/mysql_data/mysql /var/lib/mysql
   echo "/opt/mysql_data/mysql/ r,
 /opt/mysql_data/mysql/** rwk," | tee --append /etc/apparmor.d/local/usr.sbin.mysqld
@@ -28,9 +27,6 @@ else #CentOS
   yum -y install mariadb-server mariadb
   systemctl enable mariadb
   mv /var/lib/mysql /opt/mysql_data/
-  chcon -R -t mysqld_db_t /opt/mysql_data/mysql
-  chcon -Ru system_u /opt/mysql_data/mysql
-  chown -R mysql:mysql /opt/mysql_data/mysql
   sed -i -e "s|var/lib|opt/mysql_data|g" /etc/my.cnf.d/mariadb-server.cnf
   sed -i -e "s|\[client\]|\[client\]\nsocket=/opt/mysql_data/mysql/mysql.sock|g" /etc/my.cnf.d/client.cnf
   setenforce 0
