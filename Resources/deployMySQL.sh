@@ -11,7 +11,7 @@ then #Ubuntu
   debconf-set-selections <<< 'mysql-server mysql-server/root_password password %ROOT_MYSQL_PASSWORD%'
   debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password %ROOT_MYSQL_PASSWORD%'
   apt-get -y update
-  apt-get -y -q install mysql-server
+  apt-get -y -q install mysql-server-5.6
   service mysql stop
   mv /var/lib/mysql /opt/mysql_data/
   ln -s /opt/mysql_data/mysql /var/lib/mysql
