@@ -46,7 +46,7 @@ Forms:
           type: string
           required: false
           hidden: true
-          descriptionTitle: Database Configuration
+          label: Database Configuration
           description: Specify the MySQL database properties
         - name: connectionIP
           type: string
@@ -62,7 +62,6 @@ Forms:
           type: password
           regexpValidator: '^.{5,100}?$'
           label: MySQL Root Password
-          descriptionTitle: Password
           description: >-
             Please provide the root MySQL password.
           helpText: >-
@@ -137,7 +136,7 @@ Forms:
           type: boolean
           label: Check to enable backups
           description: >-
-            Set to true to enable backups to object storage (every 10 days and every 3 months).
+            Set to true to enable backups to the object storage system (every 10 days and every 3 months).
           initial: true
           required: false
         - name: tenantID
@@ -152,8 +151,7 @@ Forms:
           type: password
           required: false
           regexpValidator: '^.{5,100}?$'
-          label: Openstack password
-          descriptionTitle: Password
+          label: OpenStack password
           description: >-
             Please provide your OpenStack password to access the object storage service.
           helpText: >-
