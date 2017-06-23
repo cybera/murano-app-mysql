@@ -38,8 +38,8 @@ fi
 ip="%CONNECTION_IP%"
 if  [[ !  -z  $ip  ]]
  then
-   mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY '%ROOT_MYSQL_PASSWORD%' WITH GRANT OPTION;"
-   mysql --user=root --password=%ROOT_MYSQL_PASSWORD% -e "FLUSH PRIVILEGES;"
+   mysql --user=root --password='%ROOT_MYSQL_PASSWORD%' -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%CONNECTION_IP%' IDENTIFIED BY '%ROOT_MYSQL_PASSWORD%' WITH GRANT OPTION;"
+   mysql --user=root --password='%ROOT_MYSQL_PASSWORD%' -e "FLUSH PRIVILEGES;"
    if (python -mplatform | grep -qi Ubuntu)
    then #Ubuntu
       sed -i -e "s/bind-address/#bind-address/g" /etc/mysql/my.cnf
